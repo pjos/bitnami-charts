@@ -90,7 +90,7 @@ image:
 ## @param adminUsername User of the application
 ## ref: https://github.com/bitnami/containers/tree/main/bitnami/gitea#configuration
 ##
-adminUsername: admin
+adminUsername: bn_user
 ## @param adminPassword Application password
 ## Defaults to a random 10-character alphanumeric string if not set
 ## ref: https://github.com/bitnami/containers/tree/main/bitnami/gitea#configuration
@@ -113,7 +113,7 @@ runMode: prod
 exposeSSH: true
 ## @param rootURL UI Root URL (for link generation)
 ##
-rootURL: ""
+rootURL: "https://gitea.apps.microshift-02.local"
 ## @param command Override default container command (useful when using custom images)
 ##
 command: []
@@ -453,7 +453,7 @@ podLabels: {}
 service:
   ## @param service.type Kubernetes Service type
   ##
-  type: ClusterIP
+  type: NodePort
   ## @param service.ports.http Service HTTP port
   ## @param service.ports.ssh Service SSH port
   ##
@@ -477,7 +477,7 @@ service:
   ##
   nodePorts:
     http: ""
-    ssh: ""
+    ssh: "32038"
   ## @param service.externalTrafficPolicy Enable client source IP preservation
   ## ref https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
   ##
@@ -582,7 +582,7 @@ ingress:
   ingressClassName: ""
   ## @param ingress.hostname Default host for the ingress resource
   ##
-  hostname: "gitea.apps.microshift-01.local"
+  hostname: "gitea.apps.microshift-02.local"
   ## @param ingress.path The Path to Gitea. You may need to set this to '/*' in order to use this
   ## with ALB ingress controllers.
   ##

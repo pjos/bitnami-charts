@@ -44,7 +44,7 @@ fullnameOverride: ""
 kubeVersion: ""
 ## @param clusterDomain Kubernetes Cluster Domain
 ##
-clusterDomain: microshift-01.local
+clusterDomain: microshift-02.local
 ## @param commonAnnotations Annotations to add to all deployed objects
 ##
 commonAnnotations: {}
@@ -88,7 +88,7 @@ adminPassword: "supersecret"
 ## 4) if "exposureType" is "proxy" and "service.type" is "LoadBalancer",
 ## the "domain" should be the LoadBalancer IP
 ##
-externalURL: https://harbor.apps.microshift-01.local
+externalURL: https://harbor.apps.microshift-02.local
 ## Note: If Harbor is exposed via Ingress, the NGINX server will not be used
 ## @param proxy.httpProxy The URL of the HTTP proxy server
 ## @param proxy.httpsProxy The URL of the HTTPS proxy server
@@ -218,7 +218,7 @@ ingress:
     controller: default
     ## @param ingress.core.hostname Default host for the ingress record
     ##
-    hostname: harbor.apps.microshift-01.local
+    hostname: harbor.apps.microshift-02.local
     ## @param ingress.core.annotations [object] Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
     ## Use this parameter to set the required annotations for cert-manager, see
     ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
@@ -249,7 +249,7 @@ ingress:
     ##
     extraHosts: []
 #    extraHosts:
-#      - name: harbor.apps.microshift-01.local
+#      - name: harbor.apps.microshift-02.local
 #        path: /
     ## @param ingress.core.extraPaths An array with additional arbitrary paths that may need to be added to the ingress under the main host
     ## e.g:
@@ -271,8 +271,8 @@ ingress:
     extraTls: []
 #    extraTls:
 #    - hosts:
-#        - harbor.apps.microshift-01.local
-#      secretName: harbor.apps.microshift-01.local-tls
+#        - harbor.apps.microshift-02.local
+#      secretName: harbor.apps.microshift-02.local-tls
     ## @param ingress.core.secrets Custom TLS certificates as secrets
     ## NOTE: 'key' and 'certificate' are expected in PEM format
     ## NOTE: 'name' should line up with a 'secretName' set further up
