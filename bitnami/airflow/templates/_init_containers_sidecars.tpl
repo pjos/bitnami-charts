@@ -31,16 +31,24 @@ Returns an init-container that prepares the Airflow configuration files for main
 
       # Copy the configuration files to the writable directory
       cp /opt/bitnami/airflow/airflow.cfg /emptydir/app-base-dir/airflow.cfg
-      
+
       # Apply changes affecting credentials
       export AIRFLOW_CONF_FILE="/emptydir/app-base-dir/airflow.cfg"
+    {{- if (include "airflow.database.useSqlConnection" .) }}
+      airflow_conf_set "database" "sql_alchemy_conn" "$AIRFLOW_DATABASE_SQL_CONN"
+    {{- else }}
       db_user="$(airflow_encode_url "$AIRFLOW_DATABASE_USERNAME")"
       db_password="$(airflow_encode_url "$AIRFLOW_DATABASE_PASSWORD")"
       airflow_conf_set "database" "sql_alchemy_conn" "postgresql+psycopg2://${db_user}:${db_password}@${AIRFLOW_DATABASE_HOST}:${AIRFLOW_DATABASE_PORT_NUMBER}/${AIRFLOW_DATABASE_NAME}"
+    {{- end }}
     {{- if or (eq .Values.executor "CeleryExecutor") (eq .Values.executor "CeleryKubernetesExecutor") }}
       redis_credentials=":$(airflow_encode_url "$REDIS_PASSWORD")"
       [[ -n "$REDIS_USER" ]] && redis_credentials="$(airflow_encode_url "$REDIS_USER")$redis_credentials"
+    {{- if (include "airflow.database.useSqlConnection" .) }}
+      airflow_conf_set "celery" "result_backend" "db+${AIRFLOW_DATABASE_SQL_CONN}"
+    {{- else }}
       airflow_conf_set "celery" "result_backend" "db+postgresql://${db_user}:${db_password}@${AIRFLOW_DATABASE_HOST}:${AIRFLOW_DATABASE_PORT_NUMBER}/${AIRFLOW_DATABASE_NAME}"
+    {{- end }}
       airflow_conf_set "celery" "broker_url" "redis://${redis_credentials}@${REDIS_HOST}:${REDIS_PORT_NUMBER}/${REDIS_DATABASE}"
     {{- end }}
       info "Airflow configuration ready"
@@ -49,6 +57,15 @@ Returns an init-container that prepares the Airflow configuration files for main
       # application root
       touch /emptydir/app-base-dir/airflow.db
   env:
+    - name: BITNAMI_DEBUG
+      value: {{ ternary "true" "false" (or .Values.image.debug .Values.diagnosticMode.enabled) | quote }}
+    {{- if (include "airflow.database.useSqlConnection" .) }}
+    - name: AIRFLOW_DATABASE_SQL_CONN
+      valueFrom:
+        secretKeyRef:
+          name: {{ include "airflow.database.secretName" . }}
+          key: {{ include "airflow.database.secretKey" . }}
+    {{- else }}
     - name: AIRFLOW_DATABASE_NAME
       value: {{ include "airflow.database.name" . }}
     - name: AIRFLOW_DATABASE_USERNAME
@@ -57,11 +74,12 @@ Returns an init-container that prepares the Airflow configuration files for main
       valueFrom:
         secretKeyRef:
           name: {{ include "airflow.database.secretName" . }}
-          key: {{ include "airflow.database.existingsecret.key" . }}
+          key: {{ include "airflow.database.secretKey" . }}
     - name: AIRFLOW_DATABASE_HOST
       value: {{ include "airflow.database.host" . }}
     - name: AIRFLOW_DATABASE_PORT_NUMBER
       value: {{ include "airflow.database.port" . }}
+    {{- end }}
     {{- if or (eq .Values.executor "CeleryExecutor") (eq .Values.executor "CeleryKubernetesExecutor") }}
     - name: REDIS_HOST
       value: {{ include "airflow.redis.host" . | quote }}
@@ -114,14 +132,16 @@ Returns an init-container that prepares the Airflow Webserver configuration file
       airflow_webserver_conf_set "AUTH_LDAP_BIND_PASSWORD" "$AIRFLOW_LDAP_BIND_PASSWORD" "yes"
     {{- end }}
       info "Airflow webserver configuration ready"
-  {{- if .Values.ldap.enabled }}
   env:
+    - name: BITNAMI_DEBUG
+      value: {{ ternary "true" "false" (or .Values.image.debug .Values.diagnosticMode.enabled) | quote }}
+    {{- if .Values.ldap.enabled }}
     - name: AIRFLOW_LDAP_BIND_PASSWORD
       valueFrom:
         secretKeyRef:
           name: {{ include "airflow.ldap.secretName" . }}
           key: bind-password
-  {{- end }}
+    {{- end }}
   volumeMounts:
     - name: empty-dir
       mountPath: /emptydir
@@ -131,8 +151,7 @@ Returns an init-container that prepares the Airflow Webserver configuration file
 {{- end -}}
 
 {{/*
-Returns an init-container that waits for web server to be ready
-The web server runs the database migrations so once it is ready the database is ready
+Returns an init-container that waits for db migrations to be ready
 */}}
 {{- define "airflow.defaultInitContainers.waitForDBMigrations" -}}
 - name: wait-for-db-migrations
@@ -156,6 +175,9 @@ The web server runs the database migrations so once it is ready the database is 
 
       info "Waiting for db migrations to be completed"
       airflow_wait_for_db_migrations
+  env:
+    - name: BITNAMI_DEBUG
+      value: {{ ternary "true" "false" (or .Values.image.debug .Values.diagnosticMode.enabled) | quote }}
   volumeMounts:
     - name: empty-dir
       mountPath: /tmp
