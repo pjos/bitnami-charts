@@ -1,8 +1,18 @@
 # Changelog
 
-## 1.0.4 (2024-11-21)
+## 1.0.6 (2024-12-06)
 
-* [bitnami/nessie] Release 1.0.4 ([#30555](https://github.com/bitnami/charts/pull/30555))
+* [bitnami/nessie] Release 1.0.6 ([#30814](https://github.com/bitnami/charts/pull/30814))
+
+## <small>1.0.5 (2024-12-02)</small>
+
+* [bitnami/*] docs: :memo: Add "Backup & Restore" section (#30711) ([35ab536](https://github.com/bitnami/charts/commit/35ab5363741e7548f4076f04da6e62d10153c60c)), closes [#30711](https://github.com/bitnami/charts/issues/30711)
+* [bitnami/*] docs: :memo: Add "Prometheus metrics" (batch 5) (#30674) ([ed2a546](https://github.com/bitnami/charts/commit/ed2a54617faf763169e6b01a89100b9db32e1000)), closes [#30674](https://github.com/bitnami/charts/issues/30674)
+* [bitnami/nessie] Release 1.0.5 (#30712) ([79b92ab](https://github.com/bitnami/charts/commit/79b92ab8ac3181fbea44acbf26064e87df7ec5f3)), closes [#30712](https://github.com/bitnami/charts/issues/30712)
+
+## <small>1.0.4 (2024-11-21)</small>
+
+* [bitnami/nessie] Release 1.0.4 (#30555) ([180c7ee](https://github.com/bitnami/charts/commit/180c7ee1ca182f89df0ef185f5504428ab956e3d)), closes [#30555](https://github.com/bitnami/charts/issues/30555)
 
 ## <small>1.0.3 (2024-11-12)</small>
 
