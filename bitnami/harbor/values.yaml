@@ -44,7 +44,7 @@ fullnameOverride: ""
 kubeVersion: ""
 ## @param clusterDomain Kubernetes Cluster Domain
 ##
-clusterDomain: microshift-02.local
+clusterDomain: microshift-03.local
 ## @param commonAnnotations Annotations to add to all deployed objects
 ##
 commonAnnotations: {}
@@ -88,7 +88,7 @@ adminPassword: "supersecret"
 ## 4) if "exposureType" is "proxy" and "service.type" is "LoadBalancer",
 ## the "domain" should be the LoadBalancer IP
 ##
-externalURL: https://harbor.apps.microshift-02.local
+externalURL: https://harbor.apps.microshift-03.local
 ## Note: If Harbor is exposed via Ingress, the NGINX server will not be used
 ## @param proxy.httpProxy The URL of the HTTP proxy server
 ## @param proxy.httpsProxy The URL of the HTTPS proxy server
@@ -218,7 +218,7 @@ ingress:
     controller: default
     ## @param ingress.core.hostname Default host for the ingress record
     ##
-    hostname: harbor.apps.microshift-02.local
+    hostname: harbor.apps.microshift-03.local
     ## @param ingress.core.annotations [object] Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
     ## Use this parameter to set the required annotations for cert-manager, see
     ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
@@ -249,7 +249,7 @@ ingress:
     ##
     extraHosts: []
 #    extraHosts:
-#      - name: harbor.apps.microshift-02.local
+#      - name: harbor.apps.microshift-03.local
 #        path: /
     ## @param ingress.core.extraPaths An array with additional arbitrary paths that may need to be added to the ingress under the main host
     ## e.g:
@@ -271,8 +271,8 @@ ingress:
     extraTls: []
 #    extraTls:
 #    - hosts:
-#        - harbor.apps.microshift-02.local
-#      secretName: harbor.apps.microshift-02.local-tls
+#        - harbor.apps.microshift-03.local
+#      secretName: harbor.apps.microshift-03.local-tls
     ## @param ingress.core.secrets Custom TLS certificates as secrets
     ## NOTE: 'key' and 'certificate' are expected in PEM format
     ## NOTE: 'name' should line up with a 'secretName' set further up
@@ -343,7 +343,7 @@ persistence:
       subPath: ""
       accessModes:
         - ReadWriteOnce
-      size: 5Gi
+      size: 500Gi
       annotations: {}
       selector: {}
     ## @param persistence.persistentVolumeClaim.jobservice.existingClaim Name of an existing PVC to use
@@ -361,7 +361,7 @@ persistence:
       subPath: ""
       accessModes:
         - ReadWriteOnce
-      size: 1Gi
+      size: 2Gi
       annotations: {}
       selector: {}
     ## @param persistence.persistentVolumeClaim.trivy.storageClass PVC Storage Class for Trivy data volume
@@ -598,7 +598,7 @@ certificateVolume:
   ## @param certificateVolume.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if certificateVolume.resources is set (certificateVolume.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  resourcesPreset: "nano"
+  resourcesPreset: "2xlarge"
   ## @param certificateVolume.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
@@ -1104,7 +1104,7 @@ portal:
     https: 8443
   ## @param portal.replicaCount Number of Harbor Portal replicas
   ##
-  replicaCount: 1
+  replicaCount: 2
   ## Configure extra options for Harbor Portal containers' liveness, readiness and startup probes
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   ## @param portal.livenessProbe.enabled Enable livenessProbe on Harbor Portal containers

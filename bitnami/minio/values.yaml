@@ -53,7 +53,7 @@ commonAnnotations: {}
 kubeVersion: ""
 ## @param clusterDomain Default Kubernetes cluster domain
 ##
-clusterDomain: microshift-02.local
+clusterDomain: microshift-03.local
 ## @param extraDeploy Array of extra objects to deploy with the release
 ##
 extraDeploy: []
@@ -805,7 +805,7 @@ ingress:
   ingressClassName: ""
   ## @param ingress.hostname Default host for the ingress resource
   ##
-  hostname: minio.apps.microshift-02.local
+  hostname: minio.apps.microshift-03.local
   ## @param ingress.path The Path to MinIO&reg;. You may need to set this to '/*' in order to use this with ALB ingress controllers.
   ##
   path: /
@@ -916,7 +916,7 @@ apiIngress:
   ingressClassName: ""
   ## @param apiIngress.hostname Default host for the ingress resource
   ##
-  hostname: minio-api.apps.microshift-02.local
+  hostname: minio-api.apps.microshift-03.local
   ## @param apiIngress.path The Path to MinIO&reg;. You may need to set this to '/*' in order to use this with ALB ingress controllers.
   ##
   path: /
@@ -1088,7 +1088,7 @@ persistence:
     - ReadWriteOnce
   ## @param persistence.size PVC Storage Request for MinIO&reg; data volume
   ##
-  size: 10Gi
+  size: 250Gi
   ## @param persistence.annotations Annotations for the PVC
   ##
   annotations: {}
@@ -1140,7 +1140,7 @@ volumePermissions:
   ## @param volumePermissions.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if volumePermissions.resources is set (volumePermissions.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  resourcesPreset: "micro"
+  resourcesPreset: "2xlarge"
   ## @param volumePermissions.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
